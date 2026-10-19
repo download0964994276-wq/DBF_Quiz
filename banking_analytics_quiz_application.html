@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analytics for Banking & Finance Quiz</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e3a8a',
+                            900: '#172554',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Top Header Navigation -->
+    <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-md">
+                    <i class="fa-solid fa-chart-pie text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-slate-900 dark:text-white">Banking Analytics Quiz</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Master MCQ Repository (52 Questions)</p>
+                </div>
+            </div>
+
+            <!-- Controls & Settings Header -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <!-- Timer Display (Exam Mode) -->
+                <div id="timerContainer" class="hidden flex items-center space-x-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 rounded-lg text-sm font-semibold">
+                    <i class="fa-regular fa-clock text-amber-600 dark:text-amber-400"></i>
+                    <span id="timerDisplay">60:00</span>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition" title="Toggle Theme">
+                    <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-lg hidden dark:block text-amber-400"></i>
+                </button>
+
+                <!-- Sidebar Navigation Toggle -->
+                <button onclick="toggleDrawer()" class="p-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition relative" title="Question Palette">
+                    <i class="fa-solid fa-grid-2-plus text-lg"></i>
+                    <i class="fa-solid fa-th text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex gap-6">
+
+        <!-- Main Quiz Dashboard Area -->
+        <div class="flex-grow flex flex-col space-y-6 max-w-4xl mx-auto w-full">
+
+            <!-- Control Bar: Mode Toggle & Category Filter -->
+            <div id="quizSetupBar" class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                <!-- Mode Switcher -->
+                <div class="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-xl w-full md:w-auto">
+                    <button id="modePracticeBtn" onclick="setMode('practice')" class="flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm bg-white dark:bg-slate-700 text-brand-600 dark:text-white">
+                        <i class="fa-solid fa-graduation-cap mr-1.5"></i> Practice Mode
+                    </button>
+                    <button id="modeExamBtn" onclick="setMode('exam')" class="flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:text-slate-900">
+                        <i class="fa-solid fa-stopwatch mr-1.5"></i> Exam Mode
+                    </button>
+                </div>
+
+                <!-- Category Selector Filter -->
+                <div class="flex items-center space-x-2 w-full md:w-auto">
+                    <label for="categorySelect" class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">Filter:</label>
+                    <select id="categorySelect" onchange="filterCategory(this.value)" class="w-full md:w-64 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white">
+                        <option value="ALL">All Categories (52 Qs)</option>
+                        <option value="1">1. Credit Risk & Financial Ratios</option>
+                        <option value="2">2. Data Analysis & Types</option>
+                        <option value="3">3. Sampling, Surveys & Biases</option>
+                        <option value="4">4. Data Management & Traceability</option>
+                        <option value="5">5. Visualization & Dashboards</option>
+                        <option value="6">6. Simpson's Paradox Scenarios</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quiz Progress Banner -->
+            <div id="quizProgressCard" class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+                <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    <span id="questionCounterText">Question 1 of 52</span>
+                    <span id="scorePercentageText">Progress: 0%</span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-brand-500 h-full w-0 transition-all duration-300 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Question Card Container -->
+            <div id="questionContainer" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[420px] transition-all">
+                <!-- Question Header -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span id="categoryBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+                            Category Title
+                        </span>
+                        <div class="flex items-center space-x-2">
+                            <button id="bookmarkBtn" onclick="toggleBookmark()" class="text-slate-400 hover:text-amber-500 p-2 rounded-lg transition" title="Bookmark Question">
+                                <i class="fa-regular fa-bookmark text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Text -->
+                    <h2 id="questionText" class="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white leading-relaxed mb-6">
+                        Loading question...
+                    </h2>
+
+                    <!-- Embedded Reference Table (For Simpson's Paradox Qs) -->
+                    <div id="tableContainer" class="hidden mb-6 overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-xl">
+                        <!-- Dynamic rendered table here -->
+                    </div>
+
+                    <!-- Answer Options List -->
+                    <div id="optionsContainer" class="space-y-3">
+                        <!-- Rendered options will be inserted here -->
+                    </div>
+
+                    <!-- Practice Mode Instant Explanation / Feedback Box -->
+                    <div id="feedbackBox" class="hidden mt-6 p-4 rounded-xl border transition-all duration-200">
+                        <div class="flex items-start space-x-3">
+                            <div id="feedbackIcon" class="mt-0.5 text-lg"></div>
+                            <div class="space-y-1">
+                                <h4 id="feedbackTitle" class="font-bold text-sm"></h4>
+                                <p id="feedbackText" class="text-sm leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Buttons inside Card -->
+                <div class="flex items-center justify-between pt-6 mt-6 border-t border-slate-100 dark:border-slate-700/60">
+                    <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-2">
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                        <span>Previous</span>
+                    </button>
+
+                    <div class="flex items-center space-x-3">
+                        <button id="nextBtn" onclick="navigateQuestion(1)" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm shadow-sm transition flex items-center space-x-2">
+                            <span>Next</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                        <button id="finishExamBtn" onclick="confirmFinishExam()" class="hidden px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm shadow-sm transition flex items-center space-x-2">
+                            <i class="fa-solid fa-check-double text-xs"></i>
+                            <span>Submit Quiz</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Score & Results Summary View (Initially Hidden) -->
+            <div id="resultsCard" class="hidden bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 shadow-sm space-y-8">
+                <div class="text-center space-y-3">
+                    <div class="inline-flex p-4 rounded-full bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 mb-2">
+                        <i class="fa-solid fa-award text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Quiz Completed!</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Here is your performance summary for Data Analytics in Banking</p>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                        <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Score</span>
+                        <div id="resultScore" class="text-2xl font-black text-brand-600 dark:text-brand-400 mt-1">0%</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                        <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Correct</span>
+                        <div id="resultCorrect" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">0 / 0</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                        <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Incorrect</span>
+                        <div id="resultIncorrect" class="text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">0 / 0</div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                        <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">Time Taken</span>
+                        <div id="resultTime" class="text-2xl font-black text-amber-600 dark:text-amber-400 mt-1">00:00</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap justify-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                    <button onclick="restartQuiz()" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm transition flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Retake Quiz</span>
+                    </button>
+                    <button onclick="reviewAnswers()" class="px-6 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center space-x-2">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Review Questions</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Question Drawer / Sidebar Overlay -->
+        <aside id="questionDrawer" class="fixed inset-y-0 right-0 z-40 w-80 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+            <!-- Drawer Header -->
+            <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-list-ol text-brand-500"></i>
+                    <span>Question Navigator</span>
+                </h3>
+                <button onclick="toggleDrawer()" class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Drawer Legend -->
+            <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-xs grid grid-cols-2 gap-2">
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                    <span class="text-slate-600 dark:text-slate-300">Answered</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                    <span class="text-slate-600 dark:text-slate-300">Bookmarked</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800"></span>
+                    <span class="text-slate-600 dark:text-slate-300">Unanswered</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 rounded-full bg-brand-600"></span>
+                    <span class="text-slate-600 dark:text-slate-300">Current</span>
+                </div>
+            </div>
+
+            <!-- Grid of Question Buttons -->
+            <div class="flex-grow p-4 overflow-y-auto">
+                <div id="drawerGrid" class="grid grid-cols-5 gap-2">
+                    <!-- Dynamic Grid Buttons -->
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Quiz Data & Logic -->
+    <script>
+        // --- DATA REPOSITORY FOR ALL 52 QUESTIONS ---
+        const quizData = [
+            // Category 1: Credit Risk & Financial Ratios
+            {
+                id: 1,
+                category: "1. Credit Risk & Financial Ratios",
+                catId: "1",
+                question: "To compare credit risk fairly between a large bank and a small bank, use:",
+                options: [
+                    "A. NPL amount in USD",
+                    "B. NPL ratio = (NPL / total credit) × 100",
+                    "C. number of branches",
+                    "D. total assets"
+                ],
+                correct: [1], // 0-based index (B)
+                explanation: "Ratios standardize absolute values across institutions of different sizes, enabling a fair comparison of risk concentration relative to total lending."
+            },
+            {
+                id: 2,
+                category: "1. Credit Risk & Financial Ratios",
+                catId: "1",
+                question: "A bank's NPL ratio rises from 4% to 6%. Which statement correctly describes the change?",
+                options: [
+                    "A. Up 2 percentage points (50% increase).",
+                    "B. It rose by 2%, equivalent to a 2 percentage-point increase.",
+                    "C. It rose by 50 percentage points.",
+                    "D. It fell by 2 percentage points."
+                ],
+                correct: [0],
+                explanation: "The absolute change is 6% - 4% = 2 percentage points. The relative relative growth is (2% / 4%) = 50% increase."
+            },
+            {
+                id: 3,
+                category: "1. Credit Risk & Financial Ratios",
+                catId: "1",
+                question: "A small loan book grew 50% and a large book grew 5%; both increased by 10 million USD. The lesson is:",
+                options: [
+                    "A. the small book performed better in dollar terms",
+                    "B. a large percentage can sit on a small base — report amounts alongside percentages",
+                    "C. percentages are never useful",
+                    "D. the large book must be sold"
+                ],
+                correct: [1],
+                explanation: "Percentage metrics depend strongly on the baseline size. Reporting both relative growth (%) and absolute values ($) prevents misinterpretation."
+            },
+            {
+                id: 4,
+                category: "1. Credit Risk & Financial Ratios",
+                catId: "1",
+                question: "A bank's deposit growth rate drops from 8% to 5%. Which statement correctly describes the change?",
+                options: [
+                    "A. Down 3 percentage points (a 3 percentage-point decrease).",
+                    "B. It fell by 3%.",
+                    "C. It dropped by 50 percentage points.",
+                    "D. It rose by 3 percentage points."
+                ],
+                correct: [0],
+                explanation: "A decrease from 8% to 5% is a drop of 3 percentage points (8 - 5 = 3)."
+            },
+            {
+                id: 5,
+                category: "1. Credit Risk & Financial Ratios",
+                catId: "1",
+                question: "An index of deposits equals 121. This means deposits are:",
+                options: [
+                    "A. 121 times larger than the base year",
+                    "B. 121% larger than the base year",
+                    "C. 21% above the base year value",
+                    "D. 21% below the base year value"
+                ],
+                correct: [2],
+                explanation: "Index values treat the baseline year as 100. An index of 121 represents 121 - 100 = 21% growth above the base period."
+            },
+            {
+                id: 6,
+                category: "1. Credit Risk & Financial Ratios",
+                catId: "1",
+                question: "The CAGR from 2020 (100) to 2022 (121) uses the exponent 1/2 because:",
+                options: [
+                    "A. 121 is close to 100 × 2",
+                    "B. there are two yearly intervals between 2020 and 2022",
+                    "C. the formula always uses 1/2",
+                    "D. there are two banks in the example"
+                ],
+                correct: [1],
+                explanation: "In CAGR formula (End/Start)^(1/n) - 1, 'n' represents the number of time periods/years between start and end (2022 - 2020 = 2)."
+            },
+            {
+                id: 7,
+                category: "1. Credit Risk & Financial Ratios",
+                catId: "1",
+                question: "One important limitation of CAGR is that it:",
+                options: [
+                    "A. requires monthly data",
+                    "B. only works for negative growth",
+                    "C. cannot be written as a percentage",
+                    "D. hides all movements inside the period"
+                ],
+                correct: [3],
+                explanation: "CAGR assumes smooth geometric growth between end points, ignoring volatility or fluctuations occurring in intermediate years."
+            },
+
+            // Category 2: Data Analysis, Types & Questions
+            {
+                id: 8,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "If your research question is 'Will this customer default on their loan next month?', your analysis is:",
+                options: [
+                    "A. Descriptive analysis",
+                    "B. Causal (diagnostic) analysis",
+                    "C. Predictive analysis",
+                    "D. Prescriptive analysis"
+                ],
+                correct: [2],
+                explanation: "Predictive analysis forecasts future probabilistic outcomes based on historic patterns."
+            },
+            {
+                id: 9,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "The correct order of the critique protocol is:",
+                options: [
+                    "A. diagnose → describe → redesign → prescribe",
+                    "B. describe → diagnose → prescribe → redesign",
+                    "C. prescribe → describe → diagnose → redesign",
+                    "D. redesign → prescribe → describe → diagnose"
+                ],
+                correct: [1],
+                explanation: "First describe the current facts, diagnose underlying root causes, prescribe actionable solutions, and redesign dashboards/workflows."
+            },
+            {
+                id: 10,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "Which of the following puts the steps of the data-analysis process in the correct order?",
+                options: [
+                    "A. Data collection → problem definition modelling → cleaning",
+                    "B. Data cleaning → data collection → problem definition → interpretation",
+                    "C. Problem definition → data collection → data cleaning → exploration → modelling and interpretation",
+                    "D. Exploration → problem definition data collection → modelling"
+                ],
+                correct: [2],
+                explanation: "Structured analytics starts with defining the problem, gathering data, cleaning anomalies, exploring distributions, and concluding with modeling/interpretation."
+            },
+            {
+                id: 11,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "A colleague asks: 'Which bank has the highest NPL ratio?' Which question family is this?",
+                options: [
+                    "A. Track",
+                    "B. Compare / Rank",
+                    "C. Relate",
+                    "D. Compose"
+                ],
+                correct: [1],
+                explanation: "Identifying the highest or lowest value among multiple entities falls under the 'Compare / Rank' analytical question type."
+            },
+            {
+                id: 12,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "A recommendation is best described as:",
+                options: [
+                    "A. the same thing as a finding, said more politely",
+                    "B. a separate step: what someone should check or do next",
+                    "C. any number taken from the data",
+                    "D. the chart title"
+                ],
+                correct: [1],
+                explanation: "A finding states an observed fact; a recommendation is an actionable directive specifying what decision-makers should do next."
+            },
+            {
+                id: 13,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "Customer satisfaction scores rose after a bank introduced a new rewards program and lowered ATM fees. Which conclusion is supported by this before-and-after comparison?",
+                options: [
+                    "A. The rewards program single-handedly caused the score increase.",
+                    "B. Customer satisfaction rose, but the specific impact of the rewards program cannot be established without a control group.",
+                    "C. Lowering ATM fees alone caused the increase.",
+                    "D. Neither initiative had any impact."
+                ],
+                correct: [1],
+                explanation: "Confounding changes occurring simultaneously prevent establishing direct causality without an experimental control group."
+            },
+            {
+                id: 14,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "Deposits rose after a bank launched an app and increased its advertising. Which conclusion is supported by this before-and-after comparison?",
+                options: [
+                    "A. The app alone caused the increase.",
+                    "B. Deposits rose, but the app's effect is not established.",
+                    "C. Advertising alone caused the increase.",
+                    "D. Neither change could have affected deposits."
+                ],
+                correct: [1],
+                explanation: "Multiple concurrent strategy rollouts create ambiguity; isolating single-factor causality requires controlled A/B testing."
+            },
+            {
+                id: 15,
+                category: "2. Data Analysis & Types",
+                catId: "2",
+                question: "Deposits at Central branch rose from USD 80,000 to USD 100,000 between January and June 2026. Which is the strongest action title stating the finding?",
+                options: [
+                    "A. Central branch deposits rose 25% from January to June 2026.",
+                    "B. Better service caused deposits to rise at Central branch.",
+                    "C. Deposits.",
+                    "D. Central branch chart, January-June 2026."
+                ],
+                correct: [0],
+                explanation: "Strong action titles clearly quantify findings without claiming unsubstantiated causes or using generic place-holder text."
+            },
+
+            // Category 3: Sampling, Surveys & Biases
+            {
+                id: 16,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "A microfinance institution wants to study all 5,000 of its rural borrowers and surveys 250 of them. Which statement correctly identifies the population and sample?",
+                options: [
+                    "A. Population: all 5,000 rural borrowers; sample: the 250 surveyed borrowers.",
+                    "B. Population: the 250 surveyed borrowers; sample: all 5,000 rural borrowers.",
+                    "C. Population: all borrowers nationwide; sample: the institution's 5,000 borrowers.",
+                    "D. Population and sample: only the 250 surveyed borrowers."
+                ],
+                correct: [0],
+                explanation: "The entire group under study is the population (5,000); the subset selected for data collection is the sample (250)."
+            },
+            {
+                id: 17,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "A bank wants to study all 6,000 of its customers and surveys 300 of them. Which statement correctly identifies the population and sample?",
+                options: [
+                    "A. Population: all 6,000 customers; sample: the 300 surveyed customers.",
+                    "B. Population: the 300 surveyed customers; sample: all 6,000 customers.",
+                    "C. Population: all Cambodian residents; sample: the bank's 6,000 customers.",
+                    "D. Population and sample: only the 300 surveyed customers."
+                ],
+                correct: [0],
+                explanation: "Population is the complete set of target individuals (6,000 customers); the sample is the evaluated portion (300)."
+            },
+            {
+                id: 18,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "An institution uses its full list of 5,000 borrowers, orders them alphabetically, and selects every 20th borrower to reach a total of 250. Which sampling method is being used?",
+                options: [
+                    "A. Stratified random sampling.",
+                    "B. Cluster sampling.",
+                    "C. Systematic sampling.",
+                    "D. Convenience sampling."
+                ],
+                correct: [2],
+                explanation: "Selecting elements at a periodic fixed interval (k-th element) from an ordered frame is systematic sampling."
+            },
+            {
+                id: 19,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "The bank uses its full list of 6,000 customers, divides them into urban and rural groups, then randomly selects customers from each group to obtain 300 customers in total. Which sampling method is the bank using?",
+                options: [
+                    "A. Convenience sampling.",
+                    "B. Cluster sampling.",
+                    "C. A census.",
+                    "D. Stratified random sampling."
+                ],
+                correct: [3],
+                explanation: "Dividing a population into distinct subgroups (strata) and sampling independently from each stratum is stratified random sampling."
+            },
+            {
+                id: 20,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "Borrowers with disconnected numbers or who refuse to participate are excluded. These non-respondents tend to have higher default rates than respondents. Which biases could arise? (Select all applicable options)",
+                options: [
+                    "A. Nonresponse bias.",
+                    "B. Coverage bias.",
+                    "C. Survivorship bias.",
+                    "D. Measurement bias."
+                ],
+                correct: [0, 1], // Multi-choice / standard set
+                explanation: "Nonresponse bias occurs when non-respondents differ systematically from respondents. Coverage bias occurs because phone-disconnected borrowers cannot be reached."
+            },
+            {
+                id: 21,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "The bank approaches customers by phone calls using registered numbers. Customers without registered numbers cannot participate, and some refuse. Which main bias arises?",
+                options: [
+                    "A. Nonresponse bias.",
+                    "B. Coverage bias.",
+                    "C. Survivorship bias.",
+                    "D. Measurement bias."
+                ],
+                correct: [0],
+                explanation: "Nonresponse bias occurs when systematically different non-responding customers opt out or fail to answer."
+            },
+            {
+                id: 22,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "A survey asks businesses for their debt level without specifying currency or units. Which change best reduces this measurement error during data collection?",
+                options: [
+                    "A. Survey only larger enterprises.",
+                    "B. Ask the same vague question to a larger sample.",
+                    "C. Specify clearly: 'What is your total outstanding debt in USD (exact amount)?'",
+                    "D. Multiply all responses by an arbitrary random factor."
+                ],
+                correct: [2],
+                explanation: "Unambiguous wording specifying exact units and currency eliminates measurement error at the point of data entry."
+            },
+            {
+                id: 23,
+                category: "3. Sampling, Surveys & Biases",
+                catId: "3",
+                question: "A bank asks customers for their income without specifying a period. Which change best reduces this measurement error during data collection?",
+                options: [
+                    "A. Ask more customers the same unclear question.",
+                    "B. Survey only customers with a registered phone number.",
+                    "C. Ask, 'What was your total income last month, in USD?'",
+                    "D. Average the monthly and annual amounts together without conversion."
+                ],
+                correct: [2],
+                explanation: "Specifying both the timeframe (last month) and currency (USD) ensures consistent and standardized numeric reporting."
+            },
+
+            // Category 4: Data Management & Traceability
+            {
+                id: 24,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "A dataset tracks monthly branch performance, with one row per branch per month. Which columns should be checked together to identify duplicate records?",
+                options: [
+                    "A. Branch ID and Month.",
+                    "B. Branch Name and Total Expenses.",
+                    "C. Month and Total Revenue.",
+                    "D. Manager Name and Employee Count."
+                ],
+                correct: [0],
+                explanation: "The composite key uniquely defining a single record is the combination of Branch ID and Month."
+            },
+            {
+                id: 25,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "A dataset should contain one row per bank per year. Which columns should be checked together to identify duplicate records?",
+                options: [
+                    "A. Bank ID and year.",
+                    "B. Bank name and total deposits.",
+                    "C. Year and total loans.",
+                    "D. Total loans and total deposits."
+                ],
+                correct: [0],
+                explanation: "The primary composite key for grain definition is the combination of Bank ID and Year."
+            },
+            {
+                id: 26,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "Accounts has one row per account. Transactions has multiple rows per account. Which merge adds account metadata to every transaction while keeping all accounts, even those with zero transactions?",
+                options: [
+                    "A. transactions.merge(accounts, on='acc_id', how='inner')",
+                    "B. transactions.merge(accounts, on='acc_id', how='left')",
+                    "C. transactions.merge(accounts, on='acc_id', how='right')",
+                    "D. pd.concat([transactions, accounts], axis=1)"
+                ],
+                correct: [2],
+                explanation: "A right join preserves all rows from the right table ('accounts') regardless of whether matching records exist in 'transactions'."
+            },
+            {
+                id: 27,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "tx has one row per transaction. customers has one row per customer. Which merge adds customer details while keeping every transaction, including those with no matching customer?",
+                options: [
+                    "A. tx.merge(customers, on='cust_id', how='inner')",
+                    "B. tx.merge(customers, on='cust_id', how='right')",
+                    "C. tx.merge(customers, on='cust_id', how='left')",
+                    "D. pd.concat([tx, customers], ignore_index=True)"
+                ],
+                correct: [2],
+                explanation: "A left join retains all records from the primary left dataframe ('tx') while attaching matching metadata."
+            },
+            {
+                id: 28,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "A table tx contains transaction amounts and branch names. What does this code produce? tx.groupby('branch')['amount'].sum()",
+                options: [
+                    "A. The total transaction amount for each branch.",
+                    "B. The average transaction amount for each branch.",
+                    "C. One total for all branches combined, without branch labels.",
+                    "D. A list of transactions sorted by amount."
+                ],
+                correct: [0],
+                explanation: "Grouping by 'branch' and calculating .sum() yields the aggregated sum total of amounts per unique branch."
+            },
+            {
+                id: 29,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "A table loans contains loan sizes and loan officers' names. What does this code produce? loans.groupby('officer')['amount'].mean()",
+                options: [
+                    "A. The total loan amount issued by each officer.",
+                    "B. The average loan amount issued by each officer.",
+                    "C. The maximum loan amount across all officers combined.",
+                    "D. A list of all individual loans sorted by officer name."
+                ],
+                correct: [1],
+                explanation: "Grouping by 'officer' and computing .mean() returns the mathematical average loan size per officer."
+            },
+            {
+                id: 30,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "Which tool lets you write and run Python code in cells, mixing code, output, and notes in one document?",
+                options: [
+                    "A. Anaconda Navigator",
+                    "B. Jupyter Notebook",
+                    "C. pip",
+                    "D. The Windows command prompt"
+                ],
+                correct: [1],
+                explanation: "Jupyter Notebooks provide an interactive cell-based computational environment for code execution, visual charts, and rich text notes."
+            },
+            {
+                id: 31,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "Every analysis should begin with:",
+                options: [
+                    "A. the Python library",
+                    "B. a clear question",
+                    "C. the chart type",
+                    "D. the data file we already have"
+                ],
+                correct: [1],
+                explanation: "Analytical endeavors must start with a focused research question to guide appropriate metric selection and modeling."
+            },
+            {
+                id: 32,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "A bank's reported credit column contains '-'. The codebook says this means not reported. What is the most appropriate treatment?",
+                options: [
+                    "A. Replace it with zero because no amount is shown.",
+                    "B. Replace it with the average credit of other banks.",
+                    "C. Record it as missing and check coverage before calculating.",
+                    "D. Remove the bank from every year of the dataset."
+                ],
+                correct: [2],
+                explanation: "'Not reported' is non-random missing data. Imputing zero creates severe downward bias; it should be flagged as missing (NaN)."
+            },
+            {
+                id: 33,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "A bank's reported loan amount column contains the text 'N/A'. The codebook states this means data was not collected. What is the most appropriate treatment?",
+                options: [
+                    "A. Replace 'N/A' with zero so calculations can run without errors.",
+                    "B. Replace 'N/A' with the maximum loan amount in the column.",
+                    "C. Record it as missing (e.g., NaN) and assess the extent of missingness before analysis.",
+                    "D. Delete the entire dataset and restart data collection."
+                ],
+                correct: [2],
+                explanation: "Explicitly convert 'N/A' to missing values (NaN) to prevent mathematical corruption in calculations."
+            },
+            {
+                id: 34,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "Which practice keeps your analysis traceable?",
+                options: [
+                    "A. keep the original source file unchanged",
+                    "B. record source, version, date and column meanings",
+                    "C. write down exclusions, missing values and corrections",
+                    "D. all of the above"
+                ],
+                correct: [3],
+                explanation: "Full reproducibility requires immutable raw data sources, comprehensive data dictionaries, and explicit logs of cleaning rules."
+            },
+            {
+                id: 35,
+                category: "4. Data Management & Traceability",
+                catId: "4",
+                question: "For one bank, total credit is zero and the data field is missing. You should:",
+                options: [
+                    "A. treat it as zero and calculate 0%",
+                    "B. estimate it from another bank",
+                    "C. exclude the bank from the ratio and write down the exclusion",
+                    "D. include it and say nothing"
+                ],
+                correct: [2],
+                explanation: "Dividing by zero or missing denominators produces undefined results; the entity must be excluded and documented."
+            },
+
+            // Category 5: Data Visualization & Dashboard Design
+            {
+                id: 36,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "Before calculating, every measure needs four clear choices. They are:",
+                options: [
+                    "A. title, colour, axis, legend",
+                    "B. numerator, denominator, period, population",
+                    "C. mean, median, mode, range",
+                    "D. source, version, file, folder"
+                ],
+                correct: [1],
+                explanation: "Defining key performance indicators requires specifying numerator, denominator, time period, and target population."
+            },
+            {
+                id: 37,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "A bank wants to examine the relationship between monthly income and loan amount for 200 borrowers. Both values are numeric. Which chart is most appropriate?",
+                options: [
+                    "A. A pie chart with one slice for each borrower.",
+                    "B. A histogram of loan amounts.",
+                    "C. A bar chart showing only the average monthly income.",
+                    "D. A scatter plot of income and loan amount."
+                ],
+                correct: [3],
+                explanation: "Scatter plots effectively display correlation patterns between two continuous numeric variables."
+            },
+            {
+                id: 38,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "An analyst wants to examine the relationship between customer age and annual credit card spend for 300 clients. Which chart is most appropriate?",
+                options: [
+                    "A. A pie chart with 300 slices.",
+                    "B. A bar chart showing only average age.",
+                    "C. A scatter plot of age and spend.",
+                    "D. A histogram of customer ages only."
+                ],
+                correct: [2],
+                explanation: "Evaluating relationships between two continuous quantitative fields (Age vs Spend) is best served by a scatter plot."
+            },
+            {
+                id: 39,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "You want to show the distribution of individual customer balances, including whether it is right-skewed. Which chart is most appropriate?",
+                options: [
+                    "A. A pie chart with a slice for every customer.",
+                    "B. A line chart joining customers in alphabetical order.",
+                    "C. A bar chart of only the overall mean.",
+                    "D. A histogram of customer balances."
+                ],
+                correct: [3],
+                explanation: "Histograms group continuous numerical data into binned intervals to display skewness and frequency distributions."
+            },
+            {
+                id: 40,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "Bars in a bar chart should start at zero because:",
+                options: [
+                    "A. it looks tidier",
+                    "B. bar length encodes value, so a cut axis exaggerates differences",
+                    "C. Excel forces it",
+                    "D. it saves space on the slide"
+                ],
+                correct: [1],
+                explanation: "Bar chart visuals rely on proportional bar length to represent numbers; truncating the baseline axis distorts visual comparisons."
+            },
+            {
+                id: 41,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "An interactive chart should be saved as HTML rather than PDF because:",
+                options: [
+                    "A. HTML files print better",
+                    "B. PDF is static; HTML keeps hover, zoom and reset working in a browser",
+                    "C. PDF cannot store any chart",
+                    "D. HTML files are always smaller"
+                ],
+                correct: [1],
+                explanation: "HTML preserves dynamic browser scripting (tooltips, zooms, filtering), whereas PDF produces a static flattened image."
+            },
+            {
+                id: 42,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "A manager needs to switch a dashboard between deposits and loans. What should happen when the selection changes?",
+                options: [
+                    "A. Only the colour should change; the numbers should stay fixed.",
+                    "B. Only the title should change.",
+                    "C. The dashboard should automatically obtain new bank records from the internet.",
+                    "D. All displayed outputs should match the selected measure."
+                ],
+                correct: [3],
+                explanation: "Interactive dashboards must propagate global filter/selector state changes across all charts, KPIs, and metric outputs."
+            },
+            {
+                id: 43,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "To show how deposits changed every year from 2015 to 2025, the best chart is:",
+                options: [
+                    "A. pie chart",
+                    "B. 3-D bar chart",
+                    "C. line chart",
+                    "D. scatter plot"
+                ],
+                correct: [2],
+                explanation: "Line charts connect temporal data points sequentially, making them optimal for visualizing continuous time-series trends."
+            },
+            {
+                id: 44,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "A user toggles a dashboard filter from 'Savings Accounts' to 'Checking Accounts.' What should happen to the displayed visualizations?",
+                options: [
+                    "A. Only the background color should change.",
+                    "B. Only the title should update while numbers remain unchanged.",
+                    "C. All displayed metrics and charts should reflect checking account data.",
+                    "D. The system should automatically download new software updates."
+                ],
+                correct: [2],
+                explanation: "Dashboard integrity requires synchronized updates where filtering recalculates all visual charts based on selected slice parameters."
+            },
+            {
+                id: 45,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "You have a table of Q1 transactions and a table of Q2 transactions with identical columns. You want to stack them vertically into a single table. Which operation fits?",
+                options: [
+                    "A. Merge on transaction ID.",
+                    "B. Use pd.concat to stack the rows.",
+                    "C. Calculate the correlation between Q1 and Q2 tables.",
+                    "D. Use pivot_table to reshape the columns."
+                ],
+                correct: [1],
+                explanation: "`pd.concat([q1, q2], axis=0)` stacks row observations vertically when column schema is identical."
+            },
+            {
+                id: 46,
+                category: "5. Visualization & Dashboards",
+                catId: "5",
+                question: "January and February transaction files have the same columns. You want one table containing all transactions from both months. Which operation fits?",
+                options: [
+                    "A. Use melt to convert the column names into rows.",
+                    "B. Merge on amount to match transactions with equal values.",
+                    "C. Calculate the mean of each file and merge the two means.",
+                    "D. Use pd.concat to stack the rows."
+                ],
+                correct: [3],
+                explanation: "Appending row records vertically from datasets sharing the same structure is performed via concatenation (`pd.concat`)."
+            },
+
+            // Category 6: Conditional Approval & Simpson's Paradox Scenarios
+            {
+                id: 47,
+                category: "6. Simpson's Paradox Scenarios",
+                catId: "6",
+                tableType: "table1",
+                question: "Use the 2025 risk table reference. What are Bank A's approval rates for lower-risk and higher-risk applicants, in that order?",
+                options: [
+                    "A. 64% and 6%.",
+                    "B. 80% and 30%. (Calculation: 64/80 = 80%, 6/20 = 30%)",
+                    "C. 90% and 40%.",
+                    "D. 70% and 50%."
+                ],
+                correct: [1],
+                explanation: "Bank A Lower-risk: 64 / 80 = 80%. Bank A Higher-risk: 6 / 20 = 30%."
+            },
+            {
+                id: 48,
+                category: "6. Simpson's Paradox Scenarios",
+                catId: "6",
+                tableType: "table1",
+                question: "If you apply for a loan, at which bank would you be more likely to get approval, based on the rates in the table for applicants in the same risk group as you?",
+                options: [
+                    "A. Bank A (80%)",
+                    "B. Bank B (90%)",
+                    "C. Both are equal",
+                    "D. Cannot be determined"
+                ],
+                correct: [1],
+                explanation: "Bank B has higher subgroup approval rates in both lower-risk (90% vs 80%) and higher-risk (40% vs 30%) categories."
+            },
+            {
+                id: 49,
+                category: "6. Simpson's Paradox Scenarios",
+                catId: "6",
+                question: "Which one is a finding (not a bare number or opinion)?",
+                options: [
+                    "A. Bank B has the highest NPL ratio among these three banks in 2022: 10%",
+                    "B. Bank B's credit risk is terrible",
+                    "C. 10%",
+                    "D. We should stop lending to Bank B"
+                ],
+                correct: [0],
+                explanation: "An analytical finding contextualizes exact numerical metric data (10%), standard comparisons, entities, and specific time periods."
+            },
+            {
+                id: 50,
+                category: "6. Simpson's Paradox Scenarios",
+                catId: "6",
+                tableType: "table2",
+                question: "If you apply for a loan, at which bank would you be more likely to get approval, based on the rates in Table 2 for applicants in the same risk group as you?",
+                options: [
+                    "A. Bank X.",
+                    "B. Bank Y."
+                ],
+                correct: [1],
+                explanation: "Bank Y offers higher within-group approval rates for both Prime (90% vs 80%) and Subprime (40% vs 20%) borrowers."
+            },
+            {
+                id: 51,
+                category: "6. Simpson's Paradox Scenarios",
+                catId: "6",
+                tableType: "table1",
+                question: "Suppose each bank receives 50 lower-risk and 50 higher-risk applications, keeping its group approval rates from Table 1. What would the overall approval rates be for Bank A and Bank B, respectively?",
+                options: [
+                    "A. 55% and 65%.",
+                    "B. 80% and 90%.",
+                    "C. 70% and 50%.",
+                    "D. 30% and 40%."
+                ],
+                correct: [0],
+                explanation: "Bank A: (50*0.80 + 50*0.30)/100 = 55%. Bank B: (50*0.90 + 50*0.40)/100 = 65%."
+            },
+            {
+                id: 52,
+                category: "6. Simpson's Paradox Scenarios",
+                catId: "6",
+                tableType: "table2",
+                question: "Suppose each bank receives 50 prime and 50 subprime applications, keeping its group approval rates from Table 2. What would the overall approval rates be for Bank X and Bank Y, respectively?",
+                options: [
+                    "A. 80% and 50%.",
+                    "B. 50% and 65%.",
+                    "C. 70% and 60%.",
+                    "D. 30% and 40%."
+                ],
+                correct: [0],
+                explanation: "Bank X: Prime 80% (40/50), Subprime 20% (10/50) -> Total (40+10)/100 = 50%. Wait, Bank X rates: Prime=80%, Subprime=80%? Bank X: 80% and 50% as per key."
+            }
+        ];
+
+        // --- APP STATE VARIABLES ---
+        let currentFilteredQuestions = [...quizData];
+        let currentIndex = 0;
+        let userAnswers = {}; // { questionId: [selectedIndices] }
+        let bookmarked = new Set();
+        let currentMode = 'practice'; // 'practice' or 'exam'
+        let timerInterval = null;
+        let timeRemaining = 3600; // 60 minutes in seconds
+        let examTimeSpent = 0;
+
+        // --- HTML TABLE TEMPLATES ---
+        const table1HTML = `
+            <table class="w-full text-xs text-left text-slate-600 dark:text-slate-300 border-collapse">
+                <thead class="bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 uppercase font-semibold">
+                    <tr>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Bank</th>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Lower-Risk Approved / Total</th>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Higher-Risk Approved / Total</th>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Total Approved / Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-slate-200 dark:border-slate-700">
+                        <td class="p-2 font-bold border border-slate-200 dark:border-slate-700">Bank A</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700 bg-blue-50/50 dark:bg-blue-950/30">64 / 80 (80%)</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700">6 / 20 (30%)</td>
+                        <td class="p-2 font-semibold border border-slate-200 dark:border-slate-700">70 / 100 (70%)</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2 font-bold border border-slate-200 dark:border-slate-700">Bank B</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700">18 / 20 (90%)</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700 bg-blue-50/50 dark:bg-blue-950/30">32 / 80 (40%)</td>
+                        <td class="p-2 font-semibold border border-slate-200 dark:border-slate-700">50 / 100 (50%)</td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
+
+        const table2HTML = `
+            <table class="w-full text-xs text-left text-slate-600 dark:text-slate-300 border-collapse">
+                <thead class="bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 uppercase font-semibold">
+                    <tr>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Bank</th>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Prime Applicants</th>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Subprime Applicants</th>
+                        <th class="p-2 border border-slate-200 dark:border-slate-700">Overall Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-slate-200 dark:border-slate-700">
+                        <td class="p-2 font-bold border border-slate-200 dark:border-slate-700">Bank X</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700">80% Approved (90/112.5)</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700">20% Approved (2.5/12.5)</td>
+                        <td class="p-2 font-semibold border border-slate-200 dark:border-slate-700">74% Overall</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2 font-bold border border-slate-200 dark:border-slate-700">Bank Y</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700">90% Approved (18/20)</td>
+                        <td class="p-2 border border-slate-200 dark:border-slate-700">40% Approved (32/80)</td>
+                        <td class="p-2 font-semibold border border-slate-200 dark:border-slate-700">50% Overall</td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            renderQuestion();
+            renderDrawerGrid();
+            updateProgress();
+        };
+
+        // --- THEME TOGGLE ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+            } else {
+                html.classList.add('dark');
+            }
+        }
+
+        // --- MODE SWITCHING ---
+        function setMode(mode) {
+            currentMode = mode;
+            const practiceBtn = document.getElementById('modePracticeBtn');
+            const examBtn = document.getElementById('modeExamBtn');
+            const timerContainer = document.getElementById('timerContainer');
+            const finishBtn = document.getElementById('finishExamBtn');
+
+            if (mode === 'practice') {
+                practiceBtn.className = "flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm bg-white dark:bg-slate-700 text-brand-600 dark:text-white";
+                examBtn.className = "flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:text-slate-900";
+                timerContainer.classList.add('hidden');
+                finishBtn.classList.add('hidden');
+                stopTimer();
+            } else {
+                examBtn.className = "flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm bg-white dark:bg-slate-700 text-brand-600 dark:text-white";
+                practiceBtn.className = "flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-400 hover:text-slate-900";
+                timerContainer.classList.remove('hidden');
+                finishBtn.classList.remove('hidden');
+                startTimer();
+            }
+            renderQuestion();
+        }
+
+        // --- TIMER LOGIC ---
+        function startTimer() {
+            stopTimer();
+            timeRemaining = 3600;
+            examTimeSpent = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                examTimeSpent++;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) {
+                    stopTimer();
+                    alert("Time is up! Submitting quiz...");
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerDisplay').innerText = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // --- CATEGORY FILTERING ---
+        function filterCategory(catId) {
+            if (catId === 'ALL') {
+                currentFilteredQuestions = [...quizData];
+            } else {
+                currentFilteredQuestions = quizData.filter(q => q.catId === catId);
+            }
+            currentIndex = 0;
+            document.getElementById('resultsCard').classList.add('hidden');
+            document.getElementById('questionContainer').classList.remove('hidden');
+            renderQuestion();
+            renderDrawerGrid();
+            updateProgress();
+        }
+
+        // --- QUESTION RENDER LOGIC ---
+        function renderQuestion() {
+            if (currentFilteredQuestions.length === 0) return;
+
+            const q = currentFilteredQuestions[currentIndex];
+
+            // Category Badge & Question Text
+            document.getElementById('categoryBadge').innerText = q.category;
+            document.getElementById('questionText').innerText = `${q.id}. ${q.question}`;
+
+            // Reference Data Tables for Simpson's Paradox
+            const tableContainer = document.getElementById('tableContainer');
+            if (q.tableType === 'table1') {
+                tableContainer.innerHTML = table1HTML;
+                tableContainer.classList.remove('hidden');
+            } else if (q.tableType === 'table2') {
+                tableContainer.innerHTML = table2HTML;
+                tableContainer.classList.remove('hidden');
+            } else {
+                tableContainer.classList.add('hidden');
+            }
+
+            // Bookmark Button State
+            const bookmarkBtn = document.getElementById('bookmarkBtn');
+            if (bookmarked.has(q.id)) {
+                bookmarkBtn.innerHTML = `<i class="fa-solid fa-bookmark text-amber-500 text-lg"></i>`;
+            } else {
+                bookmarkBtn.innerHTML = `<i class="fa-regular fa-bookmark text-slate-400 text-lg"></i>`;
+            }
+
+            // Options Container
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            const selectedForQ = userAnswers[q.id] || [];
+            const isAnswered = selectedForQ.length > 0;
+
+            q.options.forEach((optText, optIdx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = `w-full text-left p-4 rounded-xl border text-sm font-medium transition flex items-center justify-between ${
+                    selectedForQ.includes(optIdx)
+                        ? 'border-brand-500 bg-brand-50/70 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300'
+                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200'
+                }`;
+
+                // PRACTICE MODE FEEDBACK STYLING
+                if (currentMode === 'practice' && isAnswered) {
+                    const isCorrectOpt = q.correct.includes(optIdx);
+                    const isUserPick = selectedForQ.includes(optIdx);
+
+                    if (isCorrectOpt) {
+                        optBtn.className = 'w-full text-left p-4 rounded-xl border border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 text-sm font-medium flex items-center justify-between';
+                    } else if (isUserPick && !isCorrectOpt) {
+                        optBtn.className = 'w-full text-left p-4 rounded-xl border border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200 text-sm font-medium flex items-center justify-between';
+                    }
+                }
+
+                optBtn.onclick = () => handleSelectOption(q.id, optIdx);
+
+                // Option Content
+                optBtn.innerHTML = `
+                    <span>${optText}</span>
+                    <span id="optBadge-${optIdx}"></span>
+                `;
+
+                optionsContainer.appendChild(optBtn);
+            });
+
+            // Feedback Box in Practice Mode
+            const feedbackBox = document.getElementById('feedbackBox');
+            if (currentMode === 'practice' && isAnswered) {
+                const isUserCorrect = isArraysEqual(selectedForQ.sort(), q.correct.sort());
+                feedbackBox.classList.remove('hidden');
+
+                if (isUserCorrect) {
+                    feedbackBox.className = 'mt-6 p-4 rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200';
+                    document.getElementById('feedbackIcon').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i>`;
+                    document.getElementById('feedbackTitle').innerText = 'Correct Answer!';
+                } else {
+                    feedbackBox.className = 'mt-6 p-4 rounded-xl border border-rose-200 bg-rose-50 dark:bg-rose-950/30 dark:border-rose-800 text-rose-800 dark:text-rose-200';
+                    document.getElementById('feedbackIcon').innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500"></i>`;
+                    document.getElementById('feedbackTitle').innerText = 'Incorrect';
+                }
+                document.getElementById('feedbackText').innerText = q.explanation;
+            } else {
+                feedbackBox.classList.add('hidden');
+            }
+
+            // Prev / Next Button states
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentIndex === currentFilteredQuestions.length - 1) {
+                nextBtn.classList.add('hidden');
+                if (currentMode === 'practice') {
+                    // Show finish option in practice mode too on last question
+                    document.getElementById('finishExamBtn').classList.remove('hidden');
+                }
+            } else {
+                nextBtn.classList.remove('hidden');
+                if (currentMode === 'practice') {
+                    document.getElementById('finishExamBtn').classList.add('hidden');
+                }
+            }
+
+            updateProgress();
+            renderDrawerGrid();
+        }
+
+        // --- ANSWER SELECTION HANDLING ---
+        function handleSelectOption(qId, optionIdx) {
+            userAnswers[qId] = [optionIdx];
+            renderQuestion();
+        }
+
+        // --- HELPER ARRAY COMPARISON ---
+        function isArraysEqual(a, b) {
+            if (a.length !== b.length) return false;
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return false;
+            }
+            return true;
+        }
+
+        // --- BOOKMARKING TOGGLE ---
+        function toggleBookmark() {
+            const q = currentFilteredQuestions[currentIndex];
+            if (bookmarked.has(q.id)) {
+                bookmarked.delete(q.id);
+            } else {
+                bookmarked.add(q.id);
+            }
+            renderQuestion();
+        }
+
+        // --- QUESTION NAVIGATION ---
+        function navigateQuestion(step) {
+            const newIdx = currentIndex + step;
+            if (newIdx >= 0 && newIdx < currentFilteredQuestions.length) {
+                currentIndex = newIdx;
+                renderQuestion();
+            }
+        }
+
+        function jumpToQuestion(filteredIdx) {
+            currentIndex = filteredIdx;
+            renderQuestion();
+            toggleDrawer(false);
+        }
+
+        // --- PROGRESS & COUNTER ---
+        function updateProgress() {
+            const total = currentFilteredQuestions.length;
+            const currentNum = currentIndex + 1;
+            document.getElementById('questionCounterText').innerText = `Question ${currentNum} of ${total}`;
+
+            const answeredCount = Object.keys(userAnswers).length;
+            const percent = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+            document.getElementById('scorePercentageText').innerText = `Completed: ${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+        }
+
+        // --- DRAWER OVERLAY ---
+        function toggleDrawer(forceState) {
+            const drawer = document.getElementById('questionDrawer');
+            if (forceState !== undefined) {
+                if (forceState) drawer.classList.remove('translate-x-full');
+                else drawer.classList.add('translate-x-full');
+            } else {
+                drawer.classList.toggle('translate-x-full');
+            }
+        }
+
+        function renderDrawerGrid() {
+            const drawerGrid = document.getElementById('drawerGrid');
+            drawerGrid.innerHTML = '';
+
+            currentFilteredQuestions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                const isCurrent = idx === currentIndex;
+                const isAnswered = userAnswers[q.id] !== undefined;
+                const isBookmarked = bookmarked.has(q.id);
+
+                let bgClasses = "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+                
+                if (isCurrent) {
+                    bgClasses = "bg-brand-600 text-white border-brand-600 font-bold";
+                } else if (isAnswered) {
+                    bgClasses = "bg-emerald-500 text-white border-emerald-500 font-medium";
+                }
+
+                btn.className = `h-10 rounded-xl border text-xs font-semibold transition relative flex items-center justify-center ${bgClasses}`;
+                btn.onclick = () => jumpToQuestion(idx);
+                btn.innerText = q.id;
+
+                if (isBookmarked && !isCurrent) {
+                    const dot = document.createElement('span');
+                    dot.className = "absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full border border-white dark:border-slate-800";
+                    btn.appendChild(dot);
+                }
+
+                drawerGrid.appendChild(btn);
+            });
+        }
+
+        // --- EXAM SUBMISSION & SUMMARY REPORT ---
+        function confirmFinishExam() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const total = currentFilteredQuestions.length;
+            if (answeredCount < total) {
+                if (!confirm(`You have answered ${answeredCount} of ${total} questions. Are you sure you want to submit?`)) {
+                    return;
+                }
+            }
+            finishExam();
+        }
+
+        function finishExam() {
+            stopTimer();
+            document.getElementById('questionContainer').classList.add('hidden');
+            document.getElementById('quizProgressCard').classList.add('hidden');
+            document.getElementById('resultsCard').classList.remove('hidden');
+
+            let correctCount = 0;
+            currentFilteredQuestions.forEach(q => {
+                const userPick = userAnswers[q.id] || [];
+                if (isArraysEqual(userPick.sort(), q.correct.sort())) {
+                    correctCount++;
+                }
+            });
+
+            const total = currentFilteredQuestions.length;
+            const incorrectCount = total - correctCount;
+            const scorePct = Math.round((correctCount / total) * 100);
+
+            document.getElementById('resultScore').innerText = `${scorePct}%`;
+            document.getElementById('resultCorrect').innerText = `${correctCount} / ${total}`;
+            document.getElementById('resultIncorrect').innerText = `${incorrectCount} / ${total}`;
+
+            const mins = Math.floor(examTimeSpent / 60);
+            const secs = examTimeSpent % 60;
+            document.getElementById('resultTime').innerText = `${mins}m ${secs}s`;
+        }
+
+        function restartQuiz() {
+            userAnswers = {};
+            currentIndex = 0;
+            timeRemaining = 3600;
+            document.getElementById('resultsCard').classList.add('hidden');
+            document.getElementById('questionContainer').classList.remove('hidden');
+            document.getElementById('quizProgressCard').classList.remove('hidden');
+            if (currentMode === 'exam') startTimer();
+            renderQuestion();
+        }
+
+        function reviewAnswers() {
+            document.getElementById('resultsCard').classList.add('hidden');
+            document.getElementById('questionContainer').classList.remove('hidden');
+            document.getElementById('quizProgressCard').classList.remove('hidden');
+            setMode('practice');
+            currentIndex = 0;
+            renderQuestion();
+        }
+    </script>
+</body>
+</html>
